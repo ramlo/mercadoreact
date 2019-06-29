@@ -35,6 +35,7 @@ constructor(){
       {nombre: "Marcadores Color",precio:85,stock:400,categoria:"Librería"}
     ]*/
   }
+  this.actualizarEstado = this.actualizarEstado.bind(this)
 }
 
 componentWillMount(){
@@ -56,8 +57,29 @@ componentWillMount(){
     */
 }
 
-  actualizarEstado(){
-    console.log("Acá voy a actualizar o borrar un producto...");
+  actualizarEstado(product, borrar = false){
+    if(!borrar){
+      this.setState({products : this.state.products.map(
+          oldProduct =>  (oldProduct.id === product.id) ? product: oldProduct
+        )})
+    }else{
+      const listProducts= this.state.products.filter(
+        productItemFromList =>  productItemFromList.idProducto !== product.idProducto
+      )
+      console.table(listProducts)
+      this.setState({products: listProducts});
+
+      /*
+      this.setState({products : this.state.products.filter(
+        function (productItemFromList) {
+            console.log("To Be Deleted: "+productItemFromList.idProducto)
+            console.log("Product Individual: "+product.idProducto)
+            console.log("To Be Returned: ",productItemFromList.idProducto !== product.idProducto)
+            return productItemFromList.idProducto !== product.idProducto
+         }
+      )}
+    )*/
+  }
   }
 
   render(){
@@ -66,7 +88,10 @@ componentWillMount(){
     }
     else{
       const productos = this.state.products.map(
-        (product, index) => <Product item={product} key={index} onActualizarEstado={this.actualizarEstado} />
+        (product, index) => {
+          console.log(`Render ----> index: ${index} of  ${product.Nombre} `)
+          return <Product item={product} key={product.idProducto} onActualizarProducto={this.actualizarEstado} />
+          }
       )
 
       return (
@@ -76,9 +101,8 @@ componentWillMount(){
             <button onClick={this.actualizarEstado}>Actualizar Estado</button>
             <Menu links={this.state.products}/>
             <section className="container-fluid">
-              {productos}
+              <div className="row">{productos}</div>
             </section>
-            /** <ModalProduct />*/
           </div>
 
         );
