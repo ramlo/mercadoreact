@@ -44,7 +44,6 @@ class Product extends Component{
     }else{
     const url = `/MR-${this.state.idProducto}-${slugify(this.state.Nombre)}`
     const estilo = (this.state.visto) ? "card bg-dark": "card bg-light"
-    console.log(`Making Itaration ---> ${this.state.Marca} ${this.state.Nombre}`)
       return (
         <article className="col-6 col-md-4 my-2">
           <div className={estilo} >

@@ -2,7 +2,6 @@ import React from 'react';
 import Header from './Components/Header'
 import Menu from './Components/Menu'
 import Product from './Components/Product'
-import ModalProduct from './Components/ModalProduct'
 //import productos from './productos.json'
 
 import Client from './helpers/Client'
@@ -58,17 +57,29 @@ componentWillMount(){
 }
 
   actualizarEstado(product, borrar = false){
+    let nuevo= []
+
     if(!borrar){
+      nuevo = this.state.products.map(
+                oldProduct =>  (oldProduct.id === product.id) ? product: oldProduct
+              )
+
+      /*
       this.setState({products : this.state.products.map(
           oldProduct =>  (oldProduct.id === product.id) ? product: oldProduct
         )})
+        */
     }else{
+      nuevo = this.state.products.filter(
+                productItemFromList =>  productItemFromList.idProducto !== product.idProducto
+              )
+      /*
       const listProducts= this.state.products.filter(
         productItemFromList =>  productItemFromList.idProducto !== product.idProducto
       )
       console.table(listProducts)
       this.setState({products: listProducts});
-
+      */
       /*
       this.setState({products : this.state.products.filter(
         function (productItemFromList) {
@@ -80,6 +91,9 @@ componentWillMount(){
       )}
     )*/
   }
+    this.setState({products : nuevo}, () =>{
+      window.localStorage.setItem('_products', JSON.stringify(nuevo)) // Actualizo storage con callback
+    })
   }
 
   render(){
@@ -89,7 +103,6 @@ componentWillMount(){
     else{
       const productos = this.state.products.map(
         (product, index) => {
-          console.log(`Render ----> index: ${index} of  ${product.Nombre} `)
           return <Product item={product} key={product.idProducto} onActualizarProducto={this.actualizarEstado} />
           }
       )
